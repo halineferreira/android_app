@@ -20,7 +20,7 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         try {
-            URL url = new URL("https://api.myjson.com/bins/j5f6b");
+            URL url = new URL("https://restcountries.eu/rest/v2/all");
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             InputStream inputStream = httpURLConnection.getInputStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -33,10 +33,18 @@ public class fetchData extends AsyncTask<Void,Void,Void> {
             JSONArray JA = new JSONArray(data);
             for(int i =0 ;i <JA.length(); i++){
                 JSONObject JO = (JSONObject) JA.get(i);
-                singleParsed =  "Name:" + JO.get("name") + "\n"+
-                        "Password:" + JO.get("password") + "\n"+
-                        "Contact:" + JO.get("contact") + "\n"+
-                        "Country:" + JO.get("country") + "\n";
+
+                JSONArray currencies = JO.getJSONArray("currencies");
+                JSONObject currency = currencies.getJSONObject(0);
+                String currencyName = currency.get("name").toString();
+
+                JSONArray languages = JO.getJSONArray("languages");
+                JSONObject language = languages.getJSONObject(0);
+                String languageName = language.get("name").toString();
+
+                singleParsed =  "Name: " + JO.get("name") + "\n"+
+                                "Currency: " + currencyName + "\n"+
+                                "Language: " + languageName + "\n";
 
                 dataParsed = dataParsed + singleParsed +"\n" ;
 
